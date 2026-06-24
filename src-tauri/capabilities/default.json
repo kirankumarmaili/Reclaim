@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Reclaim needs only its two core commands. No filesystem, shell, or network plugins are granted — the engine touches the disk directly in Rust, under the safety gate.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

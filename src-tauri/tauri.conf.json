@@ -1,0 +1,36 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Reclaim",
+  "version": "0.1.0",
+  "identifier": "dev.reclaim.app",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "Reclaim",
+        "width": 1180,
+        "height": 800,
+        "minWidth": 920,
+        "minHeight": 620,
+        "titleBarStyle": "Overlay",
+        "backgroundColor": "#0E1116"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "app",
+    "category": "Utility",
+    "shortDescription": "Risk-aware disk recovery for developers.",
+    "icon": ["icons/icon.png"]
+  }
+}
