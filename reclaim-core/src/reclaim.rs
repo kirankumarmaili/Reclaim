@@ -115,6 +115,13 @@ pub fn reclaim_with(
     result
 }
 
+impl ReclaimResult {
+    /// True if nothing was actually removed.
+    pub fn deleted_nothing(&self) -> bool {
+        self.moved_to_trash.is_empty() && self.permanently_deleted.is_empty()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -192,7 +199,7 @@ mod tests {
         let res = reclaim_with(&authoritative, &[target("vol", Mode::Permanent)], home.path(), &spy);
         assert!(res.permanently_deleted.is_empty());
         assert!(res.deleted_nothing());
-        assert_eq!(res.skipped[0].reason.contains("Protected"), true);
+        assert!(res.skipped[0].reason.contains("Protected"));
     }
 
     #[test]
@@ -237,12 +244,5 @@ mod tests {
         assert_eq!(res.permanently_deleted.len(), 1);
         assert_eq!(spy.deleted.borrow().len(), 1);
         assert!(spy.trashed.borrow().is_empty());
-    }
-}
-
-impl ReclaimResult {
-    /// True if nothing was actually removed.
-    pub fn deleted_nothing(&self) -> bool {
-        self.moved_to_trash.is_empty() && self.permanently_deleted.is_empty()
     }
 }

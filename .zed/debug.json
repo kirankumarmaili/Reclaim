@@ -1,0 +1,47 @@
+// Zed debugger configurations for Reclaim (CodeLLDB).
+// Each config builds the relevant crate first, then launches the binary.
+//
+// Note: `reclaim-mcp` reads JSON-RPC from stdin, so launching it under the
+// debugger drops you at a blank stdin — useful for breakpoints in dispatch, not
+// for interactive driving. To debug a specific request, set a breakpoint in
+// `server::handle_line` and paste one JSON line into the debug console's stdin,
+// or debug the unit tests instead (most logic is covered there).
+[
+  {
+    "label": "Debug: reclaim CLI — scan ~/Library",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "build": {
+      "command": "cargo",
+      "args": ["build", "-p", "reclaim-core", "--bin", "reclaim"]
+    },
+    "program": "$ZED_WORKTREE_ROOT/target/debug/reclaim",
+    "args": ["scan", "$HOME/Library"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "Debug: reclaim-mcp server (stdio)",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "build": {
+      "command": "cargo",
+      "args": ["build", "-p", "reclaim-mcp"]
+    },
+    "program": "$ZED_WORKTREE_ROOT/target/debug/reclaim-mcp",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "Debug: reclaim-mcp unit tests",
+    "adapter": "CodeLLDB",
+    "request": "launch",
+    "build": {
+      "command": "cargo",
+      "args": ["test", "-p", "reclaim-mcp", "--no-run"]
+    },
+    "cargo": {
+      "args": ["test", "-p", "reclaim-mcp", "--no-run"]
+    },
+    "cwd": "$ZED_WORKTREE_ROOT"
+  }
+]

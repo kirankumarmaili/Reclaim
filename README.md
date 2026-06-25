@@ -131,7 +131,7 @@ cargo build --release -p reclaim-core
 ## Testing & build
 
 ```bash
-cargo test                       # 17 core tests — the safety gate has the most
+cargo test                       # 27 tests (17 core + 10 mcp) — the safety gate has the most
 cargo clippy                     # lints (kept clean)
 pnpm build                       # typecheck (tsc) + production frontend build
 pnpm tauri build                 # bundle the distributable .app (macOS)
@@ -143,9 +143,12 @@ pnpm tauri build                 # bundle the distributable .app (macOS)
 reclaim-core/   Rust engine — scan, detectors, safety gate, reclaim, CLI
   src/detectors/  the declarative detector catalogue (the domain knowledge)
   src/safety.rs   the safety gate (re-validate risk + path on every delete)
+reclaim-mcp/    MCP server — exposes the core to agents over JSON-RPC stdio
 src-tauri/      Tauri v2 shell — exposes scan/reclaim, no business logic
 src/            React + TypeScript treemap UI
+.zed/           Zed run/debug tasks (cargo test, MCP server, tauri dev, …)
 .claude/        project guide + subagent definitions for contributors
+docs/mcp.md     how to build, register, and drive the MCP server
 Prd.md          the product spec (source of truth for behavior)
 ```
 
@@ -153,6 +156,10 @@ Prd.md          the product spec (source of truth for behavior)
 
 M0 (MVP) is implemented and tested: `~/Library` scan, the Docker / JetBrains /
 Electron-cache / aerials / Xcode / container-volume detectors, the treemap UI,
-the safety gate, and Trash-first reclaim. MCP server + staged-autonomy agent path
-(M2) are scaffolded by [`.claude/agents/mcp-developer.md`](.claude/agents/mcp-developer.md)
-and reuse the same core unchanged.
+the safety gate, and Trash-first reclaim.
+
+M2 (agent path) has landed: [`reclaim-mcp`](reclaim-mcp/) exposes `scan_disk`,
+`propose_reclaim`, and `reclaim_space` as MCP tools with the staged-autonomy
+ladder (shadow → assisted → auto-safe). It reuses the core unchanged, so agent
+reclaims pass through the **same** safety gate as the UI — see
+[`docs/mcp.md`](docs/mcp.md). Brhaspati integration is the remaining work.

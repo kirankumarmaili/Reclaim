@@ -1,0 +1,18 @@
+[package]
+name = "reclaim-mcp"
+version = "0.1.0"
+edition = "2021"
+description = "MCP server exposing reclaim-core to agents under the identical safety gate. Thin client over the core — no independent delete logic."
+license = "MIT"
+
+[[bin]]
+name = "reclaim-mcp"
+path = "src/main.rs"
+
+[dependencies]
+reclaim-core = { path = "../reclaim-core" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"

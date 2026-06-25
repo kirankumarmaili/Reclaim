@@ -1,0 +1,80 @@
+// Zed runnable tasks for Reclaim. Run with `task: spawn` (cmd-shift-P) or the
+// ▶ gutter runnables. `$ZED_WORKTREE_ROOT` is the repo root.
+//
+// The Rust core is the single source of truth; most tasks drive cargo. The MCP
+// server speaks JSON-RPC on stdio, so its "run" task is mainly for a quick
+// sanity check — real use is via an MCP client (see docs/mcp.md).
+[
+  {
+    "label": "test: workspace (core + mcp)",
+    "command": "cargo",
+    "args": ["test"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always",
+    "tags": ["rust-test"]
+  },
+  {
+    "label": "test: safety gate only",
+    "command": "cargo",
+    "args": ["test", "-p", "reclaim-core", "safety", "--", "--nocapture"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "lint: clippy (all targets)",
+    "command": "cargo",
+    "args": ["clippy", "--all-targets", "--", "-D", "warnings"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "run: mcp server (stdio)",
+    "command": "cargo",
+    "args": ["run", "-p", "reclaim-mcp"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "smoke: mcp initialize + tools/list",
+    "command": "printf '%s\\n%s\\n' '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{}}' '{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/list\"}' | cargo run -q -p reclaim-mcp",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "build: mcp server (release)",
+    "command": "cargo",
+    "args": ["build", "-p", "reclaim-mcp", "--release"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "cli: scan ~/Library (pretty)",
+    "command": "cargo",
+    "args": [
+      "run", "-q", "-p", "reclaim-core", "--bin", "reclaim",
+      "--", "scan", "$HOME/Library", "--pretty"
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always"
+  },
+  {
+    "label": "app: tauri dev (full desktop)",
+    "command": "pnpm",
+    "args": ["tauri", "dev"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": false
+  },
+  {
+    "label": "web: vite dev (mock data)",
+    "command": "pnpm",
+    "args": ["dev"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "reveal": "always",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": false
+  }
+]

@@ -414,6 +414,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "reclaim-mcp"
+version = "0.1.0"
+dependencies = [
+ "reclaim-core",
+ "serde",
+ "serde_json",
+ "tempfile",
+]
+
+[[package]]
 name = "redox_users"
 version = "0.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
