@@ -24,7 +24,7 @@ impl ReclaimServer {
     pub fn new() -> Self {
         Self {
             // Later tasks extend this sum: `+ Self::encode_router()` etc.
-            tool_router: Self::reclaim_router() + Self::json_router(),
+            tool_router: Self::reclaim_router() + Self::json_router() + Self::encode_router(),
         }
     }
 }
