@@ -30,6 +30,14 @@ local-and-silent guarantee without touching Reclaim's file-safety surface.
 `root` defaults to `~/Library`. `mode` is `trash` (default, reversible) or
 `permanent` (irreversible, opt-in — never produced by `propose_reclaim`).
 
+> **Output shape:** the disk tools return their JSON (the §10 `ScanResult` /
+> `Proposal` / `ReclaimResult`) as the tool result's **`content[0].text`**, not as
+> `structuredContent`. This is because rmcp cannot generate an output schema for
+> `serde_json::Value` (its schema is "any value") without adding `JsonSchema` to
+> the `reclaim-core` types, which is out of scope. Consumers should parse the text
+> as JSON. (The utility tools below, whose result types are local, do return
+> `structuredContent`.)
+
 ### Staged autonomy (`policy`)
 
 Mirrors the Brhaspati rollout ladder. Only `auto_safe` may execute its own

@@ -63,6 +63,13 @@ mod tests {
     use super::*;
 
     #[test]
+    fn get_info_advertises_name_and_tools_capability() {
+        let info = ReclaimServer::default().get_info();
+        assert_eq!(info.server_info.name, "reclaim-mcp");
+        assert!(info.capabilities.tools.is_some());
+    }
+
+    #[test]
     fn server_exposes_all_thirteen_tools() {
         let s = ReclaimServer::new();
         let names: std::collections::BTreeSet<String> = s

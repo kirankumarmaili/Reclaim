@@ -164,6 +164,10 @@ fn diff_into(path: &str, l: &Value, r: &Value, out: &mut Vec<Diff>) {
             }
         }
         _ => {
+            // Scalars of the same JSON type. Note: serde_json's Number equality is
+            // representation-sensitive, so `1` vs `1.0` reports as `changed` (both
+            // are type "number"). That is intentional — we surface representation
+            // differences rather than silently treating them as equal.
             if l != r {
                 out.push(Diff {
                     path: path.to_string(),

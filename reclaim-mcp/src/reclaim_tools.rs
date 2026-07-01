@@ -1,5 +1,14 @@
 //! The three disk tools, ported to rmcp. Each delegates to `reclaim-core`;
 //! `reclaim_space` goes through the core safety gate exactly as before.
+//!
+//! Output shape: these tools return their `reclaim-core` result serialized to a
+//! JSON string (delivered as the tool result's `content[0].text`), NOT as
+//! `structuredContent`. rmcp validates each tool's output schema at registration
+//! and panics for an "any value" schema, which is what `Json<serde_json::Value>`
+//! would produce — and giving the core types a real schema would require adding
+//! `JsonSchema` to `reclaim-core`, which is out of scope here. Consumers parse the
+//! text as JSON. (The utility tools under `tools/` return typed `structuredContent`
+//! because their result types are local and derive `JsonSchema`.)
 
 use crate::policy::{self, Policy};
 use crate::server::ReclaimServer;
@@ -110,6 +119,21 @@ mod tests {
     use reclaim_core::{Item, Mode, ReclaimTarget, Risk};
     use std::cell::RefCell;
     use std::path::{Path, PathBuf};
+
+    #[tokio::test]
+    async fn reclaim_space_with_empty_ids_is_a_tool_error() {
+        use crate::reclaim_tools::ReclaimArgs;
+        use rmcp::handler::server::wrapper::Parameters;
+        let server = ReclaimServer::new();
+        let res = server
+            .reclaim_space(Parameters(ReclaimArgs {
+                root: Some("/tmp".into()),
+                ids: vec![],
+                mode: None,
+            }))
+            .await;
+        assert!(res.is_err(), "empty ids must be a tool error");
+    }
 
     #[test]
     fn reclaim_router_exposes_the_three_disk_tools() {
