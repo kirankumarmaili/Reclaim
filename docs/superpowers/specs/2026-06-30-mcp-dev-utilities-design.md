@@ -154,5 +154,7 @@ Invalid JSON in any input is a tool error with the parse message.
 | 2 | **Docker explorer** (#2) | Read-only over the docker socket via `bollard`: list containers/images/volumes/networks, disk usage (`df`), logs. Read-only first; any prune behind an explicit gate. |
 | 3 | **Bruno-style API runner** (#4 + #6) | HTTP request collections + assertions. #4's "MCP troubleshooting" = a tool/collection that introspects and calls *other* MCP servers. |
 | 4 | **Webpage-slowness** (#7) | Rust network-level analysis: DNS/TCP/TLS/TTFB timing, redirect chain, transfer sizes, header hints. **Not** render metrics (LCP/CLS) — recommend the chrome-devtools MCP for those. |
+| 5 | **A2A protocol troubleshooting** (added 2026-07-01) | Tools to diagnose Google Agent2Agent (A2A) endpoints: fetch/validate the Agent Card (`/.well-known/agent.json`), send a `message/send` (and streaming) task and inspect the JSON-RPC response/`Task` lifecycle, surface errors. Close sibling of slice 3 (Bruno/MCP-troubleshooting) — likely shares the HTTP client. Needs its own brainstorm/spec (scope: read/probe vs full client). |
 
 Each later slice gets its own brainstorming → spec → plan → implementation cycle.
+**Slice 1 status:** implemented, reviewed clean, on branch `feat/mcp-server` (commits 2999d4d..a38ce41).
