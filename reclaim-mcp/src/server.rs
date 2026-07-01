@@ -57,3 +57,28 @@ impl ServerHandler for ReclaimServer {
             )
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn server_exposes_all_thirteen_tools() {
+        let s = ReclaimServer::new();
+        let names: std::collections::BTreeSet<String> = s
+            .tool_router
+            .list_all()
+            .iter()
+            .map(|t| t.name.to_string())
+            .collect();
+        for n in [
+            "scan_disk", "propose_reclaim", "reclaim_space",
+            "json_prettify", "json_minify", "json_compare", "json_validate",
+            "encode", "decode", "hash",
+            "time_convert", "time_now", "time_diff",
+        ] {
+            assert!(names.contains(n), "missing tool: {n}");
+        }
+        assert_eq!(names.len(), 13);
+    }
+}

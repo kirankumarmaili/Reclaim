@@ -163,3 +163,10 @@ M2 (agent path) has landed: [`reclaim-mcp`](reclaim-mcp/) exposes `scan_disk`,
 ladder (shadow → assisted → auto-safe). It reuses the core unchanged, so agent
 reclaims pass through the **same** safety gate as the UI — see
 [`docs/mcp.md`](docs/mcp.md). Brhaspati integration is the remaining work.
+
+The MCP server is built on the official Rust SDK (`rmcp`) and, alongside the disk
+tools, now ships **offline developer utilities** — JSON (`json_prettify`,
+`json_minify`, `json_compare`, `json_validate`), encoding/hashing (`encode`,
+`decode`, `hash`), and time (`time_convert`, `time_now`, `time_diff`). These are
+pure, inline-string-only tools (no filesystem, no network). See
+[`docs/mcp.md`](docs/mcp.md).
