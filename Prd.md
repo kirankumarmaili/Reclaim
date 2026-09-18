@@ -123,7 +123,7 @@ Detectors encode the domain knowledge. Each defines: target paths, risk class, a
 | **JetBrains old versions** | `~/Library/Application Support/JetBrains/<Product><Version>` | Review | Group by product; keep newest *N* (default 1) → Protected; older → Review. Index caches under `~/Library/Caches/JetBrains` → Safe. |
 | **Electron app caches** | `Cache`, `Code Cache`, `GPUCache`, `DawnCache`, `CachedData`, `Crashpad` under each app's Application Support | Safe | Size threshold (≥5 MB) to surface; app data folders themselves are not targeted. |
 | **Aerial wallpapers** | `~/Library/Application Support/com.apple.wallpaper/aerials` | Safe | Re-fetched on demand by macOS. |
-| **Xcode derived data / simulators** | `Developer/Xcode/DerivedData`, `Developer/CoreSimulator/Caches` | Review | Rebuilds; flagged Review because rebuild cost is non-trivial. |
+| **Xcode derived data / simulators** | `Developer/Xcode/DerivedData`, `Developer/CoreSimulator/Caches`, `Developer/CoreSimulator/Devices` | Review | Rebuilds; flagged Review because rebuild cost is non-trivial (recompiling, re-warming simulators, losing installed app data). `Devices` has no per-device split, so it downgrades to Protected whenever any simulator is currently booted. |
 | **Language build caches** | `~/.m2/repository`, `~/.gradle/caches`, `~/Library/Caches/pip`, `~/.cache/yarn` | Review | Re-downloads; opt-in only. |
 | **Local sandbox bundles** | `~/Library/Application Support/Claude/vm_bundles` | Review | Rebuilt when next used. |
 | **Container volumes** | OrbStack / Docker volumes | **Protected** | Always Protected — real data. Listed for transparency, never selectable. |
