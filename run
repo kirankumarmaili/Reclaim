@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Reclaim task runner. One entry point over the same Rust core.
+#
+#   ./run setup            Install deps (pnpm + cargo fetch)
+#   ./run app              Native desktop app          (pnpm tauri dev)
+#   ./run web              Browser UI on mock data      (pnpm dev → :1420)
+#   ./run cli   <args…>    Headless CLI over the core   (scan/reclaim/safe)
+#   ./run mcp  [--smoke]   MCP server on stdio
+#   ./run test  [args…]    Workspace tests + clippy + typecheck
+#   ./run build [target]   Release builds (cli|mcp|web|app|all)
+#
+set -euo pipefail
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/scripts"
+
+cmd="${1:-}"
+[[ $# -gt 0 ]] && shift || true
+
+case "$cmd" in
+  setup) exec "$DIR/setup.sh" "$@" ;;
+  app)   exec "$DIR/app.sh"   "$@" ;;
+  web)   exec "$DIR/web.sh"   "$@" ;;
+  cli)   exec "$DIR/cli.sh"   "$@" ;;
+  mcp)   exec "$DIR/mcp.sh"   "$@" ;;
+  test)  exec "$DIR/test.sh"  "$@" ;;
+  build) exec "$DIR/build.sh" "$@" ;;
+  -h|--help|help|"")
+    sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+    ;;
+  *)
+    printf 'unknown command: %s\n\n' "$cmd" >&2
+    sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' >&2
+    exit 1
+    ;;
+esac
