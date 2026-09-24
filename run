@@ -6,6 +6,7 @@
 #   ./run web              Browser UI on mock data      (pnpm dev → :1420)
 #   ./run cli   <args…>    Headless CLI over the core   (scan/reclaim/safe)
 #   ./run mcp  [--smoke]   MCP server on stdio
+#   ./run inspect [--check]  Test MCP tools in the Inspector UI (or headless check)
 #   ./run test  [args…]    Workspace tests + clippy + typecheck
 #   ./run build [target]   Release builds (cli|mcp|web|app|all)
 #
@@ -21,14 +22,15 @@ case "$cmd" in
   web)   exec "$DIR/web.sh"   "$@" ;;
   cli)   exec "$DIR/cli.sh"   "$@" ;;
   mcp)   exec "$DIR/mcp.sh"   "$@" ;;
+  inspect) exec "$DIR/inspect.sh" "$@" ;;
   test)  exec "$DIR/test.sh"  "$@" ;;
   build) exec "$DIR/build.sh" "$@" ;;
   -h|--help|help|"")
-    sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+    sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
     ;;
   *)
     printf 'unknown command: %s\n\n' "$cmd" >&2
-    sed -n '2,11p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' >&2
+    sed -n '2,12p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//' >&2
     exit 1
     ;;
 esac
