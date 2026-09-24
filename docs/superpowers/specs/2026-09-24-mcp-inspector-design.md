@@ -20,8 +20,11 @@ JSON-RPC. Developer tool only; not shipped to end users.
 Wrap the official **MCP Inspector** (`@modelcontextprotocol/inspector`), pinned to
 **2.8.0** (`latest` at time of writing). Verified CLI surface for 2.8.0:
 
-- Web UI: `mcp-inspector --web --config <file>` (`--server` is accepted but has no
-  effect in the web UI in 2.8.0 — it lists every server in the file — so we omit it)
+- Web UI: `mcp-inspector --web --catalog <file>`. `--catalog` is the *writable*
+  server list (add/edit/remove local stdio or remote http/sse servers in the UI);
+  `--config` is a read-only session file (adds return 403 "Server list is
+  read-only for this session") and the two are mutually exclusive. `--server` has
+  no effect in the web UI in 2.8.0, so we omit it.
 - Headless: `mcp-inspector --cli --config <file> --server <name> --method tools/list`
   (also `--method tools/call --tool-name <n> --tool-arg k=v`)
 
@@ -44,7 +47,14 @@ Mode flags (`--web`/`--cli`) must precede other options.
    - `./run` header comment and help `sed` range updated for the new command.
    - The Inspector version lives in one variable at the top of the script.
 
-2. **Session config (generated, not committed)** — `{"mcpServers":{"reclaim":{"command":"<abs path to target/debug/reclaim-mcp>"}}}`,
+2. **Server lists.** Web UI: a persistent *writable catalog*
+   (`~/.mcp-inspector/reclaim-catalog.json`, override with `INSPECTOR_CATALOG`),
+   outside the repo because it may hold remote-server headers. On each launch the
+   script upserts only `mcpServers.reclaim.command` (absolute path to this build)
+   and preserves every other entry and field; a corrupt catalog aborts rather than
+   being overwritten. This lets the user test any local or remote MCP server, not
+   just reclaim (added after review feedback 2026-09-24). `--check`: session config
+   (generated, not committed) — `{"mcpServers":{"reclaim":{"command":"<abs path to target/debug/reclaim-mcp>"}}}`,
    written by the script to a temp file and passed as `--config`. Generated so
    the absolute path is never stale or machine-specific. Verified working with
    Inspector 2.8.0.

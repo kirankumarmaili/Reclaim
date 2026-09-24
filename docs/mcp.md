@@ -96,6 +96,17 @@ the raw JSON-RPC — like an API client. Copy-paste requests are in
 [`mcp-examples.md`](mcp-examples.md). Note `reclaim_space` is a real call: it
 still defaults to Trash and still goes through the safety gate.
 
+**Testing other servers.** The Inspector isn't limited to `reclaim`: use its
+server list to add any **local** (stdio command) or **remote** (streamable HTTP /
+SSE URL, with headers) MCP server, then test it the same way. Your list is saved
+in `~/.mcp-inspector/reclaim-catalog.json` (outside the repo — it can hold
+remote-server headers) and survives restarts. `./run inspect` re-adds/repoints
+the `reclaim` entry on every launch and never touches your other entries.
+Set `INSPECTOR_CATALOG=<path>` to use a different file, e.g.
+`~/.mcp-inspector/mcp.json` to share the Inspector's own default list.
+`--check` is separate: it uses a temporary read-only config and never touches
+your catalog.
+
 ## Build
 
 ```bash
