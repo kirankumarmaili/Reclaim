@@ -72,7 +72,7 @@ case "${1:-}" in
   --check) run_checks ;;
   "")
     log "Inspector $INSPECTOR_VERSION → reclaim server (Ctrl-C to stop)"
-    npx -y "$INSPECTOR_PKG" --web --config "$CONFIG" --server reclaim
+    npx -y "$INSPECTOR_PKG" --web --config "$CONFIG"
     ;;
   *) die "usage: ./run inspect [--check]" ;;
 esac
