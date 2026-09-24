@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["reclaim-core"]
+members = ["reclaim-core", "reclaim-mcp"]
 # src-tauri path-depends on reclaim-core but is excluded from the workspace so
 # `cargo test` stays fast and core-only; build the desktop app via `pnpm tauri dev`.
 exclude = ["src-tauri"]

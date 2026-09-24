@@ -1,0 +1,31 @@
+[package]
+name = "reclaim-mcp"
+version = "0.1.0"
+edition = "2021"
+description = "MCP server exposing reclaim-core to agents under the identical safety gate. Thin client over the core — no independent delete logic."
+license = "MIT"
+
+[[bin]]
+name = "reclaim-mcp"
+path = "src/main.rs"
+
+[dependencies]
+reclaim-core = { path = "../reclaim-core" }
+rmcp = { version = "2", features = ["server", "macros", "transport-io"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std"] }
+schemars = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+base64 = "0.22"
+hex = "0.4"
+md-5 = "0.10"
+sha1 = "0.10"
+sha2 = "0.10"
+crc32fast = "1"
+percent-encoding = "2"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+chrono-tz = "0.10"
+
+[dev-dependencies]
+tempfile = "3"
