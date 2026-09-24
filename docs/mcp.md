@@ -84,6 +84,18 @@ unknown timezone) is returned as a tool error, never a panic.
 | `time_now` | `{ tz, format? }` | Same shape (reads system clock; no network). |
 | `time_diff` | `{ a, b }` | `{ seconds, human }` — `b - a`; each side is epoch seconds or RFC3339. |
 
+## Interactive testing
+
+```bash
+./run inspect            # opens the MCP Inspector with the reclaim server preloaded
+./run inspect --check    # headless: verifies tool list + a pure call + the gate over real stdio
+```
+
+Pick a tool, fill the schema-generated form, send it, and read the response and
+the raw JSON-RPC — like an API client. Copy-paste requests are in
+[`mcp-examples.md`](mcp-examples.md). Note `reclaim_space` is a real call: it
+still defaults to Trash and still goes through the safety gate.
+
 ## Build
 
 ```bash
@@ -119,13 +131,14 @@ cargo build -p reclaim-mcp --release
 
 ## Quick smoke test
 
+rmcp 2.x requires a real handshake (`initialize` with `protocolVersion`,
+`capabilities`, `clientInfo`, then the `initialized` notification) before it
+answers `tools/list`:
+
 ```bash
-printf '%s\n%s\n' \
-  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{}}' \
-  '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' \
-  | cargo run -q -p reclaim-mcp
+./run mcp --smoke
 ```
 
-You should get two JSON-RPC responses: the `initialize` result (server info +
-`tools` capability) and the full tool list — the three disk tools plus the JSON,
-encoding/hashing, and time utility tools.
+This sends `initialize` → `initialized` → `tools/list` and prints the responses:
+the server info (`tools` capability) and the full tool list — the three disk tools
+plus the JSON, encoding/hashing, and time utility tools.
